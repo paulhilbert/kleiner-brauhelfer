@@ -53,6 +53,14 @@ private:
   double getVerdampfungsziffer();
   //setzt die Verdampfungsziffer der Ausgewählten Brauanlage
   void setVerdampfungsziffer(double value);
+  //gibt Wasserverlust durch Whirlpool der Ausgewählten Brauanlage zurück
+  double getVerlustWhirlpool();
+  //setzt den Wasserverlust durch Whirlpool der Ausgewählten Brauanlage
+  void setVerlustWhirlpool(double value);
+  //gibt Wasserverlust durch Gärung der Ausgewählten Brauanlage zurück
+  double getVerlustGaerung();
+  //setzt den Wasserverlust durch Gärung der Ausgewählten Brauanlage
+  void setVerlustGaerung(double value);
   //gibt die Kosten der Ausgewählten Brauanlage zurück
   double getBrauanlageKosten();
   //setzt die Kosten der Ausgewählten Brauanlage

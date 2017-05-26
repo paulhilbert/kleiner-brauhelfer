@@ -16,6 +16,8 @@ private:
   double Sudpfanne_Durchmesser;
   double Sudpfanne_MaxFuellhoehe;
   double Verdampfungsziffer;
+  double VerlustWhirlpool;
+  double VerlustGaerung;
   double Kosten;
   int ID;
 
@@ -39,6 +41,10 @@ public:
   void setSudpfanne_MaxFuellhoehe(double value);
   double getVerdampfungsziffer() const;
   void setVerdampfungsziffer(double value);
+  double getVerlustWhirlpool() const;
+  void setVerlustWhirlpool(double value);
+  double getVerlustGaerung() const;
+  void setVerlustGaerung(double value);
   int getID() const;
   void setID(int value);
   double getKorrekturFarbe() const;

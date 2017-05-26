@@ -91,6 +91,26 @@ void Brauanlage::setVerdampfungsziffer(double value)
   Verdampfungsziffer = value;
 }
 
+double Brauanlage::getVerlustWhirlpool() const
+{
+  return VerlustWhirlpool;
+}
+
+void Brauanlage::setVerlustWhirlpool(double value)
+{
+  VerlustWhirlpool = value;
+}
+
+double Brauanlage::getVerlustGaerung() const
+{
+  return VerlustGaerung;
+}
+
+void Brauanlage::setVerlustGaerung(double value)
+{
+  VerlustGaerung = value;
+}
+
 int Brauanlage::getID() const
 {
   return ID;
@@ -132,4 +152,6 @@ Brauanlage::Brauanlage()
   Sudpfanne_Durchmesser = 36;
   Sudpfanne_Hoehe = 29;
   Sudpfanne_MaxFuellhoehe= 27;
+  VerlustWhirlpool = 0.0;
+  VerlustGaerung = 0.0;
 }

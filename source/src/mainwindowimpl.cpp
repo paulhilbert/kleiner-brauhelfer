@@ -227,6 +227,8 @@ MainWindowImpl::MainWindowImpl( QWidget * parent,  Qt::WindowFlags f)
   connect(spinBox_Gesammtkochdauer, SIGNAL( valueChanged(int) ), this, SLOT( slot_spinBoxGesammtkochdauerChanged(int) ));
 
   connect(doubleSpinBox_Verdampfung, SIGNAL( valueChanged(double) ), this, SLOT( slot_spinBoxValueChanged(double) ));
+  connect(doubleSpinBox_VerlustWhirlpool, SIGNAL( valueChanged(double) ), this, SLOT( slot_spinBoxValueChanged(double) ));
+  connect(doubleSpinBox_VerlustGaerung, SIGNAL( valueChanged(double) ), this, SLOT( slot_spinBoxValueChanged(double) ));
   connect(dspinBox_KostenAusruestung, SIGNAL( valueChanged(double) ), this, SLOT( slot_spinBoxValueChanged(double) ));
   connect(dSpinBox_KorrekturNachguss, SIGNAL( valueChanged(double) ), this, SLOT( slot_spinBoxValueChanged(double) ));
   connect(spinBox_Menge, SIGNAL( valueChanged(double) ), this, SLOT( slot_spinBoxValueChanged(double) ));
@@ -533,6 +535,50 @@ void MainWindowImpl::setVerdampfungsziffer(double value)
   Brauanlage* item = dynamic_cast<Brauanlage*>(listWidget_Brauanlagen->selectedItems().first());
   if (item != 0) {
     item->setVerdampfungsziffer(value);
+  }
+}
+
+double MainWindowImpl::getVerlustWhirlpool()
+{
+  double r=0;
+  for (int i=0; i<listWidget_Brauanlagen->count();i++) {
+    Brauanlage* item = dynamic_cast<Brauanlage*>(listWidget_Brauanlagen->item(i));
+    if (item != 0) {
+      if (item->text() == comboBox_AuswahlBrauanlage->currentText()) {
+        r= item->getVerlustWhirlpool();
+      }
+    }
+  }
+  return r;
+}
+
+void MainWindowImpl::setVerlustWhirlpool(double value)
+{
+  Brauanlage* item = dynamic_cast<Brauanlage*>(listWidget_Brauanlagen->selectedItems().first());
+  if (item != 0) {
+    item->setVerlustWhirlpool(value);
+  }
+}
+
+double MainWindowImpl::getVerlustGaerung()
+{
+  double r=0;
+  for (int i=0; i<listWidget_Brauanlagen->count();i++) {
+    Brauanlage* item = dynamic_cast<Brauanlage*>(listWidget_Brauanlagen->item(i));
+    if (item != 0) {
+      if (item->text() == comboBox_AuswahlBrauanlage->currentText()) {
+        r= item->getVerlustGaerung();
+      }
+    }
+  }
+  return r;
+}
+
+void MainWindowImpl::setVerlustGaerung(double value)
+{
+  Brauanlage* item = dynamic_cast<Brauanlage*>(listWidget_Brauanlagen->selectedItems().first());
+  if (item != 0) {
+    item->setVerlustGaerung(value);
   }
 }
 
@@ -3584,7 +3630,7 @@ void MainWindowImpl::BerAlles()
     highGravityFaktor = 1 + (double(spinBox_High_Gravity->value())/100);
 
     //Sollmenge Würze nach dem Hopfenseigen
-    spinBox_MengeSollNachHopfenseihen->setValue(spinBox_Menge->value()/highGravityFaktor);
+    spinBox_MengeSollNachHopfenseihen->setValue(doubleSpinBox_VerlustWhirlpool->value() + (spinBox_Menge->value() + doubleSpinBox_VerlustGaerung->value())/highGravityFaktor);
 
     //QMessageBox::information ( this, "", "In Berechnung alles") ;
     if (!BierWurdeGebraut){
@@ -3724,7 +3770,7 @@ void MainWindowImpl::BerSchuettung()
 
   //Anhand der verbleibenden Wunschstammwürze Gesammtschüttung berechnen
   double gs;
-  gs = Berechnungen.GetGesammtSchuettung(spinBox_Menge -> value()/highGravityFaktor,
+  gs = Berechnungen.GetGesammtSchuettung(doubleSpinBox_VerlustWhirlpool->value() + (spinBox_Menge -> value() + doubleSpinBox_VerlustGaerung -> value())/highGravityFaktor,
                                          sw_schuettung*highGravityFaktor, getAngenommeneSudhausausbeute());
 
   //Überprüfen ob die Schüttungsaufteilung auch 100% entspricht
@@ -15624,6 +15670,10 @@ void MainWindowImpl::on_listWidget_Brauanlagen_itemSelectionChanged()
     spinBox_AngenommeneAusbeute -> setValue(item->getSudhausausbeute());
     //Verdampfungsziffer
     doubleSpinBox_Verdampfung -> setValue(item->getVerdampfungsziffer());
+    //VerlustWhirlpool
+    doubleSpinBox_VerlustWhirlpool -> setValue(item->getVerlustWhirlpool());
+    //VerlustGaerung
+    doubleSpinBox_VerlustGaerung -> setValue(item->getVerlustGaerung());
     //Kosten
     dspinBox_KostenAusruestung->setValue(item->getKosten());
     //Korrektur der Nachgussmenge
