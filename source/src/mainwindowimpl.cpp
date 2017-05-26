@@ -5029,7 +5029,7 @@ void MainWindowImpl::ErstelleSpickzettel()
     s += "</div>";
   }
 
-  s += "<div><p class='version'>"APP_NAME" v";
+  s += QString("<div><p class='version'>")+APP_NAME+" v";
   s += VERSION;
   s += "</p></div>";
 
@@ -11300,7 +11300,7 @@ void MainWindowImpl::ErstelleZusammenfassung()
     s += "</div>";
   }
 
-  s += "<div><p class='version'>"APP_NAME" v";
+  s += QString("<div><p class='version'>")+APP_NAME+" v";
   s += VERSION;
   s += "</p></div>";
 
