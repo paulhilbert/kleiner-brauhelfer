@@ -573,6 +573,8 @@ private slots:
   void on_spinBox_AngenommeneAusbeute_valueChanged(int arg1);
   void on_dSpinBox_KorrekturNachguss_valueChanged(double arg1);
   void on_doubleSpinBox_Verdampfung_valueChanged(double arg1);
+  void on_doubleSpinBox_VerlustGaerung_valueChanged(double arg1);
+  void on_doubleSpinBox_VerlustWhirlpool_valueChanged(double arg1);
   void on_spinBox_MaischebottichHoehe_valueChanged(double arg1);
   void on_spinBox_MaischebottichDurchmesser_valueChanged(double arg1);
   void on_spinBox_MaischebottichMaxFuellhoehe_valueChanged(double arg1);

@@ -907,6 +907,12 @@ void MainWindowImpl::LeseAusruestungDB()
       //Verdampfungsziffer
       FeldNr = query.record().indexOf("Verdampfungsziffer");
       item->setVerdampfungsziffer(query.value(FeldNr).toDouble());
+      //Wasserverlust durch Whirlpool
+      FeldNr = query.record().indexOf("Verlust_Whirlpool");
+      item->setVerlustWhirlpool(query.value(FeldNr).toDouble());
+      //Wasserverlust durch Gärung
+      FeldNr = query.record().indexOf("Verlust_Gaerung");
+      item->setVerlustGaerung(query.value(FeldNr).toDouble());
       //Korrektur der Nachgussmenge
       FeldNr = query.record().indexOf("KorrekturWasser");
       item->setKorrekturWasser(query.value(FeldNr).toDouble());
@@ -962,7 +968,7 @@ void MainWindowImpl::SchreibeAusruestungDB()
     }
     for (int i = 0; i < listWidget_Brauanlagen->count(); i++) {
       Brauanlage* item = dynamic_cast<Brauanlage*>(listWidget_Brauanlagen->item(i));
-      sql = "INSERT INTO 'Ausruestung' ('Name', 'AnlagenID', 'Maischebottich_Hoehe','Maischebottich_Durchmesser','Maischebottich_MaxFuellhoehe','Sudpfanne_Hoehe','Sudpfanne_Durchmesser','Sudpfanne_MaxFuellhoehe','KorrekturWasser','KorrekturFarbe','Verdampfungsziffer', 'Kosten', 'Sudhausausbeute') ";
+      sql = "INSERT INTO 'Ausruestung' ('Name', 'AnlagenID', 'Maischebottich_Hoehe','Maischebottich_Durchmesser','Maischebottich_MaxFuellhoehe','Sudpfanne_Hoehe','Sudpfanne_Durchmesser','Sudpfanne_MaxFuellhoehe','KorrekturWasser','KorrekturFarbe','Verdampfungsziffer', 'Kosten', 'Sudhausausbeute', 'Verlust_Whirlpool', 'Verlust_Gaerung') ";
       sql += "VALUES (";
       sql += "'"+item->text().replace("'","''")+"',";
       sql += QString::number(item->getID())+",";
@@ -976,7 +982,9 @@ void MainWindowImpl::SchreibeAusruestungDB()
       sql += QString::number(item->getKorrekturFarbe())+",";
       sql += QString::number(item->getVerdampfungsziffer())+",";
       sql += QString::number(item->getKosten())+",";
-      sql += QString::number(item->getSudhausausbeute())+")";
+      sql += QString::number(item->getSudhausausbeute())+",";
+      sql += QString::number(item->getVerlustWhirlpool())+",";
+      sql += QString::number(item->getVerlustGaerung())+")";
       if (!query.exec(sql)) {
         ErrorMessage *errorMessage = new ErrorMessage();
         errorMessage -> showMessage(ERR_SQL_DB_ABFRAGE, TYPE_WARNUNG,
@@ -5328,7 +5336,7 @@ void MainWindowImpl::BerBraudaten()
   spinBox_MengeSollcmVonOben -> setValue(getSudpfanneHoehe() - spinBox_MengeSollcmVomBoden -> value());
   //Stamwürze bei Kochbeginn
   double swvsoll = spinBox_SWSollKochen->value();
-  double mengeKochende100grad = Berechnungen.BerVolumenWasser(20,99,spinBox_Menge->value());
+  double mengeKochende100grad = Berechnungen.BerVolumenWasser(20,99,doubleSpinBox_VerlustWhirlpool->value() + (spinBox_Menge->value() + doubleSpinBox_VerlustGaerung->value()) / highGravityFaktor);
   swvsoll = swvsoll/doubleSpinBox_VolumenPfannevoll->value()*mengeKochende100grad;
   spinBox_SWSollKochbegin->setValue(swvsoll);
   //Menge nach Kochende Heiss
@@ -11766,7 +11774,7 @@ void MainWindowImpl::BerPfanneVoll()
   doubleSpinBox_VolumenPfannevoll -> setValue(
         Berechnungen.GetPfanneVoll(getVerdampfungsziffer(),
                                    spinBox_Gesammtkochdauer->value(),
-                                   spinBox_Menge -> value()/highGravityFaktor ) );
+                                   doubleSpinBox_VerlustWhirlpool->value() + (spinBox_Menge -> value() + doubleSpinBox_VerlustGaerung->value())/highGravityFaktor ) );
 }
 
 
@@ -15732,6 +15740,24 @@ void MainWindowImpl::on_doubleSpinBox_Verdampfung_valueChanged(double arg1)
     setAenderung(true);
     AenderungAusruestung = true;
     setVerdampfungsziffer(arg1);
+  }
+}
+
+void MainWindowImpl::on_doubleSpinBox_VerlustGaerung_valueChanged(double arg1)
+{
+  if (Gestartet) {
+    setAenderung(true);
+    AenderungAusruestung = true;
+    setVerlustGaerung(arg1);
+  }
+}
+
+void MainWindowImpl::on_doubleSpinBox_VerlustWhirlpool_valueChanged(double arg1)
+{
+  if (Gestartet) {
+    setAenderung(true);
+    AenderungAusruestung = true;
+    setVerlustWhirlpool(arg1);
   }
 }
 
